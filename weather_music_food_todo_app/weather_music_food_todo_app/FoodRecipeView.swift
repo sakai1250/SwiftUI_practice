@@ -13,16 +13,13 @@ struct FoodResponse: Codable {
     struct Result: Codable {
         struct Large: Codable {
             let categoryName: String
-            let categoryId: String
         }
         struct Medium: Codable {
             let categoryName: String
-            let categoryId: Int
-
         }
         struct Small: Codable {
             let categoryName: String
-            let categoryId: Int
+            let categoryUrl: String
 
         }
         let large: [Large]
@@ -51,6 +48,7 @@ struct FoodRecipeView: View {
     @State private var recipes: [String] = []
     @State private var randomIndex: Int = 0
     @State private var Id: [String] = []
+    @State private var extractedValues: [String] = []
     @State private var Category: [String] = []
     @State private var dict: [String: String] = [:]
     @State private var randId: String = ""
@@ -79,21 +77,18 @@ struct FoodRecipeView: View {
                 AsyncImage(url: URL(string: _url))
                     .padding()
                     .frame(width:300,height:300)
-            }
-//            List(dict, id: \.self) { dic in
-//                Text(dic)
-//            }
+                }
             }.onAppear {
                 fetchdictionary()
                 fetchData()
-        }
+            }
     }
 
     func fetchData() {
         var url = ""
         
         if inputText.isEmpty {
-            var randIds = Id.shuffled()
+            var randIds = extractedValues.shuffled()
             randId = randIds.first ?? "10"
             print(randId)
 //            print(dict)
@@ -101,10 +96,10 @@ struct FoodRecipeView: View {
         }
 //        空欄ではないとき
         else {
-            var filteredValues = dict.filter { key, _ in key.contains("魚") }.values
+            var filteredValues = dict.filter { key, _ in key.contains(inputText) }.values
 //            見つからなかったとき
             if filteredValues.isEmpty {
-                var randIds = Id.shuffled()
+                var randIds = extractedValues.shuffled()
                 randId = randIds.first ?? "10"
                 print(randId)
                 url = "https://app.rakuten.co.jp/services/api/Recipe/CategoryRanking/20170426?applicationId=1088202091947710174&categoryId=" + randId
@@ -123,7 +118,7 @@ struct FoodRecipeView: View {
                 case .success(let FoodRecipeResponse):
                     ImageUrl = FoodRecipeResponse.result.map { result in return result.foodImageUrl
                     }
-                    print(ImageUrl)
+//                    print(ImageUrl)
 
                 case .failure(let error):
                     print(error)
@@ -135,11 +130,7 @@ struct FoodRecipeView: View {
         var largeCategory: [String] = []
         var mediumCategory: [String] = []
         var smallCategory: [String] = []
-        var largeId: [String] = []
-        var mediumId: [Int] = []
-        var smallId: [Int] = []
 
-        
         let url = "https://app.rakuten.co.jp/services/api/Recipe/CategoryList/20170426?applicationId=1088202091947710174"
         sleep(1)
         AF.request(url)
@@ -150,13 +141,23 @@ struct FoodRecipeView: View {
                 largeCategory = _result.large.map { large in return large.categoryName }
                 mediumCategory = _result.medium.map { medium in return medium.categoryName }
                 smallCategory = _result.small.map { small in return small.categoryName }
-                largeId = _result.large.map { large in return large.categoryId }
-                mediumId = _result.medium.map { medium in return medium.categoryId }
-                smallId = _result.small.map { small in return small.categoryId }
+
+                Id = _result.small.map { small in return small.categoryUrl }
+
+                let excludedValues = ["https://recipe.rakuten.co.jp/category/", "/"]
                 
-                Id = largeId + mediumId.map { String($0) }  + smallId.map { String($0) }
+                Id.forEach { inputString in
+                    var extractedValue = inputString
+                    excludedValues.forEach { excludedValue in
+                        extractedValue = extractedValue.replacingOccurrences(of: excludedValue, with: "")
+                    }
+                    extractedValues.append(extractedValue)
+                }
+
+//                Id = largeId + mediumId + smallId
                 Category = largeCategory + mediumCategory + smallCategory
-                dict = Dictionary(zip(Category, Id), uniquingKeysWith: { (first, _) in first })
+                dict = Dictionary(zip(Category, extractedValues), uniquingKeysWith: { (first, _) in first })
+                print(dict)
                                 
             case .failure(let error):
                 print(error)
