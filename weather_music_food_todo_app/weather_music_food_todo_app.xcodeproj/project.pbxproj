@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A0BD3162A17CBB0007212D3 /* YoutubeRankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0BD3152A17CBB0007212D3 /* YoutubeRankingView.swift */; };
+		5A0BD3182A17E729007212D3 /* TodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0BD3172A17E729007212D3 /* TodoView.swift */; };
 		5A17CF322A13AF9000D56000 /* weather_music_food_todo_appApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A17CF312A13AF9000D56000 /* weather_music_food_todo_appApp.swift */; };
 		5A17CF342A13AF9000D56000 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A17CF332A13AF9000D56000 /* ContentView.swift */; };
 		5A17CF362A13AF9300D56000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A17CF352A13AF9300D56000 /* Assets.xcassets */; };
@@ -20,7 +22,6 @@
 		5A17CF662A13C05700D56000 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A17CF652A13C05700D56000 /* MapView.swift */; };
 		5A17CFAC2A13ED5700D56000 /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A17CFAB2A13ED5700D56000 /* WeatherView.swift */; };
 		5A17CFAF2A13EE3500D56000 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 5A17CFAE2A13EE3500D56000 /* Alamofire */; };
-		5A17CFB12A13F3D600D56000 /* FoodCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A17CFB02A13F3D600D56000 /* FoodCategoryView.swift */; };
 		5A17CFB32A141A5E00D56000 /* FoodRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A17CFB22A141A5E00D56000 /* FoodRecipeView.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5A0BD3152A17CBB0007212D3 /* YoutubeRankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeRankingView.swift; sourceTree = "<group>"; };
+		5A0BD3172A17E729007212D3 /* TodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoView.swift; sourceTree = "<group>"; };
 		5A17CF2E2A13AF9000D56000 /* weather_music_food_todo_app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = weather_music_food_todo_app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A17CF312A13AF9000D56000 /* weather_music_food_todo_appApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = weather_music_food_todo_appApp.swift; sourceTree = "<group>"; };
 		5A17CF332A13AF9000D56000 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -58,7 +61,6 @@
 		5A17CF632A13B87900D56000 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		5A17CF652A13C05700D56000 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		5A17CFAB2A13ED5700D56000 /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
-		5A17CFB02A13F3D600D56000 /* FoodCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodCategoryView.swift; sourceTree = "<group>"; };
 		5A17CFB22A141A5E00D56000 /* FoodRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodRecipeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,8 +115,9 @@
 			children = (
 				5A17CF312A13AF9000D56000 /* weather_music_food_todo_appApp.swift */,
 				5A17CF332A13AF9000D56000 /* ContentView.swift */,
-				5A17CFB02A13F3D600D56000 /* FoodCategoryView.swift */,
+				5A0BD3172A17E729007212D3 /* TodoView.swift */,
 				5A17CFB22A141A5E00D56000 /* FoodRecipeView.swift */,
+				5A0BD3152A17CBB0007212D3 /* YoutubeRankingView.swift */,
 				5A17CF352A13AF9300D56000 /* Assets.xcassets */,
 				5A17CF632A13B87900D56000 /* SwiftUIView.swift */,
 				5A17CF652A13C05700D56000 /* MapView.swift */,
@@ -292,10 +295,11 @@
 				5A17CF662A13C05700D56000 /* MapView.swift in Sources */,
 				5A17CF3B2A13AF9300D56000 /* Persistence.swift in Sources */,
 				5A17CF342A13AF9000D56000 /* ContentView.swift in Sources */,
-				5A17CFB12A13F3D600D56000 /* FoodCategoryView.swift in Sources */,
+				5A0BD3162A17CBB0007212D3 /* YoutubeRankingView.swift in Sources */,
 				5A17CF322A13AF9000D56000 /* weather_music_food_todo_appApp.swift in Sources */,
 				5A17CFB32A141A5E00D56000 /* FoodRecipeView.swift in Sources */,
 				5A17CFAC2A13ED5700D56000 /* WeatherView.swift in Sources */,
+				5A0BD3182A17E729007212D3 /* TodoView.swift in Sources */,
 				5A17CF642A13B87900D56000 /* SwiftUIView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

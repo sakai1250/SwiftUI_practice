@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SwiftUIView: View {
+struct DogView: View {
     var body: some View {
         Image("inu")
             .resizable()
@@ -17,8 +17,8 @@ struct SwiftUIView: View {
     }
 }
 
-struct SwiftUIView_Previews: PreviewProvider {
+struct DogView_Previews: PreviewProvider {
     static var previews: some View {
-        SwiftUIView()
+        DogView()
     }
 }

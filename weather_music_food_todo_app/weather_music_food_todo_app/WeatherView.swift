@@ -38,7 +38,6 @@ struct WeatherView: View {
     var body: some View {
         VStack {
             Text(responseText)
-                .padding()
             AsyncImage(url: URL(string: url_sample))
 
             List(windData, id: \.self) { wind in

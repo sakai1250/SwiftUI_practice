@@ -8,85 +8,53 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
+struct RoundRectangleButton: View {
+    let title: String
+    let destination: AnyView
+    
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        ScrollView(.vertical){
-                            MapView().frame(height: 300.0).edgesIgnoringSafeArea(.top)
-                            SwiftUIView().frame(width: 200, height: 200.0).offset(y: -300).padding(.bottom, -200)
-                            Text("Item at \(item.timestamp!, formatter: itemFormatter)").offset(y: -100).padding(.bottom, -100)
-                            WeatherView().font(.subheadline)
-                            FoodCategoryView()
-                            FoodRecipeView().frame(width: 200, height: 200.0)
-                        }
-                    }
-                    label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-            Text("")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+        NavigationLink(destination: destination) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(width: 150, height: 50)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .foregroundColor(.blue)
+                )
         }
     }
 }
 
+struct ContentView: View {
+    var body: some View {
+            NavigationView {
+                VStack(spacing: 20) {
+                    TodoView()
+                    HStack(spacing: 20) {
+                        RoundRectangleButton(title: "Map", destination: AnyView(MapView()))
+                        RoundRectangleButton(title: "Dog View", destination: AnyView(DogView()))
+                    }
+                    HStack(spacing: 20) {
+                        RoundRectangleButton(title: "Weather", destination: AnyView(WeatherView()))
+                        RoundRectangleButton(title: "Food Recipe", destination: AnyView(FoodRecipeView()))
+                    }
+                    HStack(spacing: 20) {
+                        RoundRectangleButton(title: "Food Recipe", destination: AnyView(FoodRecipeView()))
+                        RoundRectangleButton(title: "YouTube Ranking", destination: AnyView(YoutubeRankingView()))
+                    }
+                }
+                .padding()
+                .navigationTitle("Home")
+            }
+    }
+}
+
 private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
+let formatter = DateFormatter()
+formatter.dateStyle = .short
+formatter.timeStyle = .medium
+return formatter
 }()
 
 struct ContentView_Previews: PreviewProvider {
