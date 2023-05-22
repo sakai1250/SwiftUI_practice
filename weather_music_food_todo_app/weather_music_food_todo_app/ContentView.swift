@@ -40,7 +40,7 @@ struct ContentView: View {
                         RoundRectangleButton(title: "Food Recipe", destination: AnyView(FoodRecipeView()))
                     }
                     HStack(spacing: 20) {
-                        RoundRectangleButton(title: "Food Recipe", destination: AnyView(FoodRecipeView()))
+                        RoundRectangleButton(title: "Todo List", destination: AnyView(TodoView()))
                         RoundRectangleButton(title: "YouTube Ranking", destination: AnyView(YoutubeRankingView()))
                     }
                 }

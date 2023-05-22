@@ -35,6 +35,7 @@ struct FoodRecipeResponse: Codable {
         let foodImageUrl: String
         let recipeMaterial: [String]
         let recipeTitle: String
+        let recipeUrl: String
     }
     let result: [Result]
 }
@@ -48,6 +49,8 @@ struct FoodRecipeView: View {
     @State private var ImageUrl: String = ""
     @State private var Materials: [[String]] = []
     @State private var Material: [String] = []
+    @State private var RecipeUrls: [String] = []
+    @State private var RecipeUrl: String = ""
     @State private var RecipeTitles: [String] = []
     @State private var RecipeTitle: String = ""
     @State private var inputText: String = ""
@@ -63,6 +66,7 @@ struct FoodRecipeView: View {
     var body: some View {
         ScrollView(.vertical) {
             VStack {
+                Text("画像タップで楽天レシピに移動")
                 TextField("Enter text", text: $inputText)
                     .keyboardType(.default)
                     .padding()
@@ -85,11 +89,17 @@ struct FoodRecipeView: View {
                 Text(RecipeTitle)
                   .font(.title)
                 AsyncImage(url: URL(string: ImageUrl)){ image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding()
-                    } placeholder: { ProgressView()
-                }.frame(width: 400, height: 400)
+                        image.resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .padding()
+                        } placeholder: { ProgressView()
+                    }.frame(width: 400, height: 400)
+                    .onTapGesture {
+                        // 画像がタップされたらHTMLサイトに移動する
+                        if let url = URL(string: RecipeUrl) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
             }
             VStack {
                 Text("〜材料〜\n")
@@ -109,7 +119,7 @@ struct FoodRecipeView: View {
         var url = ""
         
         if inputText.isEmpty {
-            var randIds = extractedValues.shuffled()
+            let randIds = extractedValues.shuffled()
             randId = randIds.first ?? "10"
 //            print(randId)
 //            print(dict)
@@ -117,10 +127,10 @@ struct FoodRecipeView: View {
         }
 //        空欄ではないとき
         else {
-            var filteredValues = dict.filter { key, _ in key.contains(inputText) }.values
+            let filteredValues = dict.filter { key, _ in key.contains(inputText) }.values
 //            見つからなかったとき
             if filteredValues.isEmpty {
-                var randIds = extractedValues.shuffled()
+                let randIds = extractedValues.shuffled()
                 randId = randIds.first ?? "10"
 //                print(randId)
                 url = "https://app.rakuten.co.jp/services/api/Recipe/CategoryRanking/20170426?applicationId=1088202091947710174&categoryId=" + randId
@@ -137,16 +147,25 @@ struct FoodRecipeView: View {
             .responseDecodable(of: FoodRecipeResponse.self) { response in
                 switch response.result {
                 case .success(let FoodRecipeResponse):
+//                    レシピ画像
                     ImageUrls = FoodRecipeResponse.result.map { result in return result.foodImageUrl
                     }
-                    ImageUrl = ImageUrls.shuffled().first ?? "https://image.space.rakuten.co.jp/d/strg/ctrl/3/3e5906a3607b2f1321cda1158b251c4223204420.40.2.3.2.jpg"
+                    let randomIndex = ImageUrls.indices.randomElement() ?? 0
+                    ImageUrl = ImageUrls[randomIndex]
+//                    材料
                     Materials = FoodRecipeResponse.result.map { result in return result.recipeMaterial
                     }
-                    Material = Materials.shuffled().first ?? ["材料名のリストがありません"]
+                    Material = Materials[randomIndex]
+//                    レシピ名
                     RecipeTitles = FoodRecipeResponse.result.map { result in return result.recipeTitle
                     }
-                    RecipeTitle = RecipeTitles.shuffled().first ?? "ハンバーグ"
-                    print(RecipeTitle)
+                    RecipeTitle = RecipeTitles[randomIndex]
+//                    レシピサイトURL
+                    RecipeUrls = FoodRecipeResponse.result.map { result in return result.recipeUrl
+                    }
+                    RecipeUrl = RecipeUrls[randomIndex]
+
+//                    print(RecipeTitle)
 
                 case .failure(let error):
                     print(error)
