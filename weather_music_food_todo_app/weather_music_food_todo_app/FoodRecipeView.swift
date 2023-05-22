@@ -33,6 +33,8 @@ struct FoodResponse: Codable {
 struct FoodRecipeResponse: Codable {
     struct Result: Codable {
         let foodImageUrl: String
+        let recipeMaterial: [String]
+        let recipeTitle: String
     }
     let result: [Result]
 }
@@ -42,7 +44,12 @@ struct FoodRecipeResponse: Codable {
 
 struct FoodRecipeView: View {
     @State private var isButtonPressed: Bool = false
-    @State private var ImageUrl: [String] = []
+    @State private var ImageUrls: [String] = []
+    @State private var ImageUrl: String = ""
+    @State private var Materials: [[String]] = []
+    @State private var Material: [String] = []
+    @State private var RecipeTitles: [String] = []
+    @State private var RecipeTitle: String = ""
     @State private var inputText: String = ""
     @State private var combinedText: String = ""
     @State private var recipes: [String] = []
@@ -54,33 +61,47 @@ struct FoodRecipeView: View {
     @State private var randId: String = ""
 
     var body: some View {
-        VStack {
-            TextField("Enter text", text: $inputText)
-                .keyboardType(.default)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+        ScrollView(.vertical) {
+            VStack {
+                TextField("Enter text", text: $inputText)
+                    .keyboardType(.default)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
                 
-            Button(action: {
-                fetchData()
-                isButtonPressed.toggle()
-            }) {
-                Text("InputText")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            
-            Text(inputText)
-
-            List(ImageUrl, id: \.self) { _url in
-                AsyncImage(url: URL(string: _url))
-                    .padding()
-                    .frame(width:300,height:300)
+                Button(action: {
+                    fetchData()
+                    isButtonPressed.toggle()
+                }) {
+                    Text("InputText")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                 }
-            }.onAppear {
-                fetchdictionary()
-                fetchData()
+                
+                Text(inputText)
+            }
+            VStack {
+                Text(RecipeTitle)
+                  .font(.title)
+                AsyncImage(url: URL(string: ImageUrl)){ image in
+                    image.resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                    } placeholder: { ProgressView()
+                }.frame(width: 400, height: 400)
+            }
+            VStack {
+                Text("〜材料〜\n")
+                    .font(.title)
+                ForEach(Material, id: \.self) { material in
+                    Text(material)
+                    }
+                }
+            }
+        .onAppear {
+            fetchdictionary()
+            fetchData()
             }
     }
 
@@ -90,7 +111,7 @@ struct FoodRecipeView: View {
         if inputText.isEmpty {
             var randIds = extractedValues.shuffled()
             randId = randIds.first ?? "10"
-            print(randId)
+//            print(randId)
 //            print(dict)
             url = "https://app.rakuten.co.jp/services/api/Recipe/CategoryRanking/20170426?applicationId=1088202091947710174&categoryId=" + randId
         }
@@ -101,12 +122,12 @@ struct FoodRecipeView: View {
             if filteredValues.isEmpty {
                 var randIds = extractedValues.shuffled()
                 randId = randIds.first ?? "10"
-                print(randId)
+//                print(randId)
                 url = "https://app.rakuten.co.jp/services/api/Recipe/CategoryRanking/20170426?applicationId=1088202091947710174&categoryId=" + randId
             }
             else {
                 randId = filteredValues.first ?? "10"
-                print(randId)
+//                print(randId)
                 url = "https://app.rakuten.co.jp/services/api/Recipe/CategoryRanking/20170426?applicationId=1088202091947710174&categoryId=" + randId
             }
         }
@@ -116,9 +137,16 @@ struct FoodRecipeView: View {
             .responseDecodable(of: FoodRecipeResponse.self) { response in
                 switch response.result {
                 case .success(let FoodRecipeResponse):
-                    ImageUrl = FoodRecipeResponse.result.map { result in return result.foodImageUrl
+                    ImageUrls = FoodRecipeResponse.result.map { result in return result.foodImageUrl
                     }
-//                    print(ImageUrl)
+                    ImageUrl = ImageUrls.shuffled().first ?? "https://image.space.rakuten.co.jp/d/strg/ctrl/3/3e5906a3607b2f1321cda1158b251c4223204420.40.2.3.2.jpg"
+                    Materials = FoodRecipeResponse.result.map { result in return result.recipeMaterial
+                    }
+                    Material = Materials.shuffled().first ?? ["材料名のリストがありません"]
+                    RecipeTitles = FoodRecipeResponse.result.map { result in return result.recipeTitle
+                    }
+                    RecipeTitle = RecipeTitles.shuffled().first ?? "ハンバーグ"
+                    print(RecipeTitle)
 
                 case .failure(let error):
                     print(error)
@@ -154,10 +182,9 @@ struct FoodRecipeView: View {
                     extractedValues.append(extractedValue)
                 }
 
-//                Id = largeId + mediumId + smallId
                 Category = largeCategory + mediumCategory + smallCategory
                 dict = Dictionary(zip(Category, extractedValues), uniquingKeysWith: { (first, _) in first })
-                print(dict)
+//                print(dict)
                                 
             case .failure(let error):
                 print(error)
